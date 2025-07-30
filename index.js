@@ -22,17 +22,22 @@ app.post("/signin", function(req,res){
     const password = req.body.password;
     const userFound = user.find(u => u.username === username && u.password === password);
     
+    // Check if user exists and password matches
     if (userFound) {
         const token = jwt.sign({ username: userFound.username }, JWT_SECRET);
+         res.header("Authorization", token);
         res.json({
             message: "Signin successful",
             token: token
+            
         });
+       
     } else {
         res.status(401).json({
             message: "Invalid credentials"
         });
     }
+    
 })
 app.get("/protected", function(req, res){
     const token = req.headers.authorization;
